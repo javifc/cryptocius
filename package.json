@@ -1,0 +1,21 @@
+{
+  "name": "cryptocius",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bots.js",
+  "scripts": {
+    "dev": "nodemon bot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "coingecko-api": "^1.0.10",
+    "node-telegram-bot-api": "^0.56.0",
+    "underscore": "^1.13.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
