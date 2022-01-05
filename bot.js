@@ -2,6 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const CoinGecko = require('coingecko-api');
 const axios = require('axios');
 const _ = require('underscore');
+var fs = require('fs');
 
 const bot_token = process.env.BOT_TOKEN;
 const giphy_token = process.env.GIPHY_TOKEN;
@@ -12,14 +13,18 @@ const opts = [
   { command: 'norris', description: 'Chuck Norris Jokes' },
   { command: 'joke', description: 'Random Jokes' },
   { command: 'price', description: ' Get a crypto price (ie: /price eth)' },
-  { command: 'gif', description: ' Get a gif meme (ie: /gif happy)' }
+  { command: 'gif', description: ' Get a gif meme (ie: /gif happy)' },
+  { command: 'chiquito', description: ' Frases de Chiquito de la Calzada' }
 ];
 
 var mapped_coins = new Array();
 var nf = Intl.NumberFormat();
+var chiquito = new Array();
 
 async function initialize() {
   bot.setMyCommands(opts);
+
+  chiquito = fs.readFileSync('bin/chiquito.txt', 'utf8').split('\n');
 
   await CoinGeckoClient.coins.list().then(data => {
     data.data.forEach(coin => {
@@ -35,7 +40,6 @@ async function getPrice(symbol, chatId) {
 
   await CoinGeckoClient.coins.fetch(coin_id, {})
     .then(data => {
-      // console.log(data.success)
       if (data.success) {
         usd_price = data.data.market_data.current_price.usd
         eur_price = data.data.market_data.current_price.eur
@@ -94,7 +98,6 @@ bot.onText(/^\/price (.+)/, function (msg, match) {
   if ((_.isUndefined(symbol)) || _.isEmpty(symbol)) {
     symbol = "btc"
   }
-  console.log(symbol);
   var chatId = msg.chat.id;
   getPrice(symbol, chatId);
 
@@ -152,6 +155,14 @@ bot.onText(/^\/gif (.+)/, function (msg, match) {
     .catch(error => {
       console.log(error);
     });
+});
+
+bot.onText(/^\/chiquito/, function (msg) {
+  var chatId = msg.chat.id;
+  var index = _.random(0, chiquito.length - 1);
+  text = chiquito[index];
+
+  bot.sendMessage(chatId, text);
 });
 
 initialize();
