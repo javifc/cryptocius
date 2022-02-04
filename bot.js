@@ -15,12 +15,17 @@ const opts = [
   { command: 'price', description: ' Get a crypto price (ie: /price eth)' },
   { command: 'gif', description: ' Get a gif meme (ie: /gif happy)' },
   { command: 'chiquito', description: ' Frases de Chiquito de la Calzada' },
-  { command: 'chiste', description: ' Chistes aleatorios' }
+  { command: 'chiste', description: ' Chistes aleatorios' },
+  { command: 'coelho', description: ' Frases chupis' },
+  { command: 'cunyao', description: ' Frases pa ir de listo' }
 ];
+
 
 var mapped_coins = new Array();
 var chiquito = new Array();
 var chistes = new Array();
+var coelho = new Array();
+var cunyao = new Array();
 
 var nf = Intl.NumberFormat();
 
@@ -30,6 +35,10 @@ async function initialize() {
   chiquito = fs.readFileSync('bin/chiquito.txt', 'utf8').split('\n');
 
   chistes = fs.readFileSync('bin/chistes.txt', 'utf8').split('\n');
+
+  coelho = fs.readFileSync('bin/coelho.txt', 'utf8').split('\n');
+
+  cunyao = fs.readFileSync('bin/cunyao.txt', 'utf8').split('\n');
 
   await CoinGeckoClient.coins.list().then(data => {
     data.data.forEach(coin => {
@@ -105,7 +114,6 @@ bot.onText(/^\/price (.+)/, function (msg, match) {
   }
   var chatId = msg.chat.id;
   getPrice(symbol, chatId);
-
 });
 
 bot.onText(/^\/norris/, function (msg) {
@@ -174,6 +182,23 @@ bot.onText(/^\/chiste/, function (msg) {
   var chatId = msg.chat.id;
   var index = _.random(0, chistes.length - 1);
   var text = chistes[index];
+
+  bot.sendMessage(chatId, text);
+});
+
+
+bot.onText(/^\/coelho/, function (msg) {
+  var chatId = msg.chat.id;
+  var index = _.random(0, coelho.length - 1);
+  var text = coelho[index];
+
+  bot.sendMessage(chatId, text);
+});
+
+bot.onText(/^\/cunyao/, function (msg) {
+  var chatId = msg.chat.id;
+  var index = _.random(0, cunyao.length - 1);
+  var text = cunyao[index];
 
   bot.sendMessage(chatId, text);
 });
